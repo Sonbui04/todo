@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@vercel/node": "^5.5.16",
     "express": "^5.2.1",
     "react-window": "^1.8.9"
   },

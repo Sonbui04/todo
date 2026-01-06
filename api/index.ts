@@ -1,10 +1,22 @@
-import express from "express";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const app = express();
-app.use(express.json());
+export default function handler(req: VercelRequest, res: VercelResponse) {
+    if (req.method === "GET" && req.url === "/api/health") {
+        return res.status(200).json({ status: "ok" });
+    }
 
-app.post("/api/auth/register", (req, res) => {
-    res.json({ message: "Register OK from Vercel backend" });
-});
+    if (req.method === "POST" && req.url === "/api/auth/register") {
+        const { email, password } = req.body || {};
 
-export default app;
+        if (!email || !password) {
+            return res.status(400).json({ message: "Missing data" });
+        }
+
+        return res.status(200).json({
+            message: "Register success",
+            email,
+        });
+    }
+
+    return res.status(404).json({ message: "Route not found" });
+}
