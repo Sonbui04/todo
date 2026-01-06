@@ -9,7 +9,7 @@ export default function handler(req, res) {
         return res.status(400).json({ message: "Missing fields" });
     }
 
-    return res.status(200).json({
+    res.status(200).json({
         message: "Register success",
         user: { email, name }
     });
