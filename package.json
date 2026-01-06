@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "express": "^5.2.1",
     "react-window": "^1.8.9"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
   }
 }
