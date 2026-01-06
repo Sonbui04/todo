@@ -1,17 +1,12 @@
 {
     "compilerOptions": {
         "target": "ES2020",
-        "module": "CommonJS",
-        "moduleResolution": "Node",
-        "esModuleInterop": true,
+        "module": "ESNext",
+        "jsx": "react-jsx",
         "strict": true,
-        "skipLibCheck": true,
-        "types": [
-            "node",
-            "express"
-        ]
+        "skipLibCheck": true
     },
     "include": [
-        "api"
+        "frontend/src"
     ]
 }
