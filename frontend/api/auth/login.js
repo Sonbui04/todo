@@ -9,18 +9,17 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: "Method not allowed" });
     }
 
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
-    const exists = await prisma.user.findUnique({ where: { email } });
-    if (exists) {
-        return res.status(400).json({ message: "Email already exists" });
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+        return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-        data: { name, email, password: hashedPassword },
-    });
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) {
+        return res.status(401).json({ message: "Invalid credentials" });
+    }
 
     const token = jwt.sign(
         { id: user.id },
@@ -28,7 +27,6 @@ export default async function handler(req, res) {
         { expiresIn: "1d" }
     );
 
-    // ⚠️ FORMAT ĐÚNG CHO FE – KHÔNG ĐỔI
     return res.json({
         token,
         user: {

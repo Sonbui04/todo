@@ -44,9 +44,9 @@ const TodoList: React.FC = () => {
             <div
                 className={`w-full max-w-4xl rounded-xl shadow-lg flex flex-col ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'
                     }`}
-                style={{ height: '90vh' }} // ⭐ QUAN TRỌNG: cố định chiều cao card
+                style={{ height: '90vh' }}
             >
-                {/* HEADER */}
+
                 <div className="bg-blue-600 px-6 py-4 flex justify-between items-center text-white shrink-0">
                     <h1 className="text-2xl font-bold">Todo List</h1>
                     <div className="flex items-center gap-4">
@@ -63,7 +63,7 @@ const TodoList: React.FC = () => {
                     </div>
                 </div>
 
-                {/* ADD + FILTER (KHÔNG SCROLL) */}
+
                 <div className="p-6 space-y-4 shrink-0">
                     <form onSubmit={handleAdd} className="flex gap-2">
                         <div className="flex-1 flex flex-col gap-2">
@@ -73,8 +73,8 @@ const TodoList: React.FC = () => {
                                 value={newTodo}
                                 onChange={(e) => setNewTodo(e.target.value)}
                                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${theme === 'dark'
-                                        ? 'bg-gray-700 border-gray-600 text-white'
-                                        : 'bg-white border-gray-200'
+                                    ? 'bg-gray-700 border-gray-600 text-white'
+                                    : 'bg-white border-gray-200'
                                     }`}
                             />
                             <input
@@ -83,8 +83,8 @@ const TodoList: React.FC = () => {
                                 value={newDescription}
                                 onChange={(e) => setNewDescription(e.target.value)}
                                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm ${theme === 'dark'
-                                        ? 'bg-gray-700 border-gray-600 text-white'
-                                        : 'bg-white border-gray-200'
+                                    ? 'bg-gray-700 border-gray-600 text-white'
+                                    : 'bg-white border-gray-200'
                                     }`}
                             />
                         </div>
@@ -103,8 +103,8 @@ const TodoList: React.FC = () => {
                                     key={f}
                                     onClick={() => setFilter(f)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium capitalize ${filter === f
-                                            ? 'bg-blue-100 text-blue-700'
-                                            : 'text-gray-500 hover:bg-gray-100'
+                                        ? 'bg-blue-100 text-blue-700'
+                                        : 'text-gray-500 hover:bg-gray-100'
                                         }`}
                                 >
                                     {f}
@@ -132,7 +132,7 @@ const TodoList: React.FC = () => {
                     </div>
                 </div>
 
-                {/* LIST (CHỈ PHẦN NÀY SCROLL) */}
+
                 <div className="flex-1 px-6 pb-6 overflow-hidden">
                     {loading && todos.length === 0 ? (
                         <div className="text-center py-10 text-gray-500">Loading todos...</div>
