@@ -5,8 +5,13 @@ export default async function handler(req, res) {
 
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: "Missing fields" });
+    }
+
+    // TEST: chưa dùng DB
     return res.status(200).json({
-        message: "Register OK",
-        data: { name, email }
+        message: "Register success",
+        user: { name, email }
     });
 }
