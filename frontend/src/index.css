@@ -2,7 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== FIX LAYOUT MOBILE – BẮT BUỘC ===== */
 @layer base {
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     @apply bg-gray-50 text-gray-900;
   }

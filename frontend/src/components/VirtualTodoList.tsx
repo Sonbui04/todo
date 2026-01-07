@@ -1,144 +1,111 @@
 import React, { useState } from 'react';
-import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
-import { Todo } from '../types';
-import { useTheme } from '../context/ThemeContext';
 
-interface VirtualTodoListProps {
-    todos: Todo[];
-    onToggle: (id: string, completed: boolean) => void;
+type TodoItemProps = {
+    id: string;
+    title: string;
+    completed: boolean;
+    onToggle: (id: string) => void;
     onDelete: (id: string) => void;
-    onEdit: (id: string, title: string, description?: string) => void;
-}
-
-type RowData = {
-    todos: Todo[];
-    onToggle: VirtualTodoListProps['onToggle'];
-    onDelete: VirtualTodoListProps['onDelete'];
-    onEdit: VirtualTodoListProps['onEdit'];
-    theme: 'light' | 'dark';
+    onEdit: (id: string, newTitle: string) => void;
 };
 
-const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
-    const todo = data.todos[index];
-    const { onToggle, onDelete, onEdit, theme } = data;
-
+const TodoItem: React.FC<TodoItemProps> = ({
+    id,
+    title,
+    completed,
+    onToggle,
+    onDelete,
+    onEdit,
+}) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [editTitle, setEditTitle] = useState(todo.title);
-    const [editDescription, setEditDescription] = useState(todo.description || '');
+    const [value, setValue] = useState(title);
 
     const handleSave = () => {
-        onEdit(todo.id, editTitle, editDescription);
+        if (value.trim()) {
+            onEdit(id, value.trim());
+        }
+        setIsEditing(false);
+    };
+
+    const handleCancel = () => {
+        setValue(title);
         setIsEditing(false);
     };
 
     return (
-        <div style={style} className="px-2 py-1">
-            <div
-                className={`p-4 rounded-lg border flex justify-between items-start gap-3 shadow-sm ${theme === 'dark'
-                    ? 'bg-gray-800 border-gray-700 text-white'
-                    : 'bg-white border-gray-200 text-gray-900'
-                    }`}
-            >
+        <div
+            className="
+        w-full max-w-full
+        p-4 rounded-lg border shadow-sm bg-white
+        flex flex-col sm:flex-row sm:items-start sm:justify-between
+        gap-3
+        box-border
+      "
+        >
+            {/* LEFT: CHECKBOX + TEXT */}
+            <div className="flex items-start gap-3 w-full min-w-0">
+                <input
+                    type="checkbox"
+                    checked={completed}
+                    onChange={() => onToggle(id)}
+                    className="mt-1 shrink-0"
+                />
 
-                <div className="flex items-start gap-3 flex-1">
+                {!isEditing ? (
+                    <span
+                        className={`break-words w-full ${completed ? 'line-through text-gray-400' : ''
+                            }`}
+                    >
+                        {title}
+                    </span>
+                ) : (
                     <input
-                        type="checkbox"
-                        checked={todo.completed}
-                        onChange={() => onToggle(todo.id, !todo.completed)}
-                        className="mt-1 w-5 h-5"
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                        className="w-full px-2 py-1 border rounded"
+                        autoFocus
                     />
+                )}
+            </div>
 
-                    {isEditing ? (
-                        <div className="flex-1 space-y-2">
-                            <input
-                                value={editTitle}
-                                onChange={(e) => setEditTitle(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-                                className={`w-full px-2 py-1 rounded outline-none ${theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-gray-100'
-                                    }`}
-                            />
-                            <input
-                                value={editDescription}
-                                onChange={(e) => setEditDescription(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-                                className={`w-full px-2 py-1 rounded outline-none text-sm ${theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-gray-100'
-                                    }`}
-                            />
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={handleSave}
-                                    className="text-xs px-2 py-1 rounded bg-green-500 text-white"
-                                >
-                                    Save
-                                </button>
-                                <button
-                                    onClick={() => setIsEditing(false)}
-                                    className="text-xs px-2 py-1 rounded bg-gray-500 text-white"
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div
-                            className="flex-1 cursor-pointer"
-                            onDoubleClick={() => setIsEditing(true)}
+            {/* RIGHT: ACTION BUTTONS */}
+            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                {!isEditing ? (
+                    <>
+                        <button
+                            onClick={() => setIsEditing(true)}
+                            className="w-full sm:w-auto text-sm text-blue-500 hover:underline"
                         >
-                            <p
-                                className={`font-medium ${todo.completed ? 'line-through text-gray-500' : ''
-                                    }`}
-                            >
-                                {todo.title}
-                            </p>
-                            {todo.description && (
-                                <p className="text-sm text-gray-500 truncate">
-                                    {todo.description}
-                                </p>
-                            )}
-                        </div>
-                    )}
-                </div>
+                            Edit
+                        </button>
 
-                <div className="flex gap-2">
-                    <button
-                        onClick={() => setIsEditing(true)}
-                        className="text-sm text-blue-500 hover:underline"
-                    >
-                        Edit
-                    </button>
-                    <button
-                        onClick={() => onDelete(todo.id)}
-                        className="text-sm text-red-500 hover:underline"
-                    >
-                        Delete
-                    </button>
-                </div>
+                        <button
+                            onClick={() => onDelete(id)}
+                            className="w-full sm:w-auto text-sm text-red-500 hover:underline"
+                        >
+                            Delete
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <button
+                            onClick={handleSave}
+                            className="w-full sm:w-auto text-sm text-green-600 hover:underline"
+                        >
+                            Save
+                        </button>
+
+                        <button
+                            onClick={handleCancel}
+                            className="w-full sm:w-auto text-sm text-gray-500 hover:underline"
+                        >
+                            Cancel
+                        </button>
+                    </>
+                )}
             </div>
         </div>
     );
 };
 
-const VirtualTodoList: React.FC<VirtualTodoListProps> = ({
-    todos,
-    onToggle,
-    onDelete,
-    onEdit,
-}) => {
-    const { theme } = useTheme();
-
-    return (
-        <div className="h-[600px] w-full">
-            <List
-                height={600}
-                width={800}
-                itemCount={todos.length}
-                itemSize={90}
-                itemData={{ todos, onToggle, onDelete, onEdit, theme }}
-            >
-                {Row}
-            </List>
-        </div>
-    );
-};
-
-export default VirtualTodoList;
+export default TodoItem;
